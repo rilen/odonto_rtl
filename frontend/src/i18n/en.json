@@ -1,4 +1,3 @@
-// Salvar em: frontend/src/i18n/en.json
 {
   "reports": {
     "title": "Reports",
@@ -21,7 +20,9 @@
     "supplier": "Supplier",
     "date": "Date",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "pagination": "Page navigation",
+    "finance_chart": "Financial amounts by patient chart"
   },
   "login": {
     "title": "Login",
