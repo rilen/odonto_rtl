@@ -1,22 +1,29 @@
 // Salvar em: frontend/src/components/Chat.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
 const Chat = ({ userId, userRole }) => {
   const { t } = useTranslation();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/chat').then(res => setMessages(res.data));
+    const websocket = new WebSocket('ws://localhost:3000');
+    setWs(websocket);
+
+    websocket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      setMessages((prev) => [...prev, message]);
+    };
+
+    return () => websocket.close();
   }, []);
 
-  const sendMessage = async () => {
-    if (!newMessage.trim()) return;
+  const sendMessage = () => {
+    if (!newMessage.trim() || !ws) return;
     const message = { user_id: userId, role: userRole, content: newMessage, timestamp: new Date().toISOString() };
-    await axios.post('/api/chat', message);
-    setMessages([...messages, message]);
+    ws.send(JSON.stringify(message));
     setNewMessage('');
   };
 
@@ -26,8 +33,8 @@ const Chat = ({ userId, userRole }) => {
       <div className="border rounded-lg p-4 mb-4 h-96 overflow-y-auto">
         {messages.map((msg, i) => (
           <div key={i} className={`mb-2 ${msg.user_id === userId ? 'text-right' : 'text-left'}`}>
-            <p className="inline-block bg-indigo-100 p-2 rounded">{msg.content}</p>
-            <p className="text-xs text-gray-500">{new Date(msg.timestamp).toLocaleString()}</p>
+            <p className="inline-block bg-indigo-100 p-2 rounded dark:bg-gray-700">{msg.content}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{new Date(msg.timestamp).toLocaleString()}</p>
           </div>
         ))}
       </div>
