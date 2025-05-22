@@ -1,3 +1,4 @@
+// Salvar em: frontend/src/i18n/pt.json
 {
   "reports": {
     "title": "Relatórios",
@@ -37,5 +38,55 @@
     "finance": "Financeiro",
     "stock": "Estoque",
     "reports": "Relatórios"
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Digite sua mensagem",
+    "input": "Campo de mensagem",
+    "send": "Enviar"
+  },
+  "admin": {
+    "title": "Gerenciamento de Usuários",
+    "name": "Nome",
+    "role": "Papel",
+    "actions": "Ações",
+    "admin": "Administrador",
+    "secretary": "Secretária",
+    "dentist": "Dentista",
+    "patient": "Paciente",
+    "change_role": "Alterar papel de {{name}}"
+  },
+  "assistant": {
+    "title": "Estoque",
+    "item": "Item",
+    "quantity": "Quantidade",
+    "critical": "Nível Crítico"
+  },
+  "dentist": {
+    "title": "Agendamentos",
+    "patient": "Paciente",
+    "date": "Data",
+    "type": "Tipo"
+  },
+  "finance": {
+    "title": "Financeiro",
+    "patient": "Paciente",
+    "amount": "Valor",
+    "status": "Status"
+  },
+  "patient": {
+    "title": "Meus Agendamentos",
+    "date": "Data",
+    "type": "Tipo",
+    "status": "Status"
+  },
+  "secretary": {
+    "title": "Gerenciamento de Agendamentos",
+    "patient": "Paciente",
+    "date": "Data",
+    "type": "Tipo",
+    "actions": "Ações",
+    "confirm": "Confirmar",
+    "confirm_label": "Confirmar agendamento {{id}}"
   }
 }
