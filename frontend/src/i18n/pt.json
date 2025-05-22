@@ -7,6 +7,7 @@
     "survey_report": "Relatório de Satisfação",
     "maintenance_report": "Relatório de Manutenção",
     "generate_pdf": "Gerar PDF",
+    "generate_csv": "Gerar CSV",
     "name": "Nome",
     "cpf": "CPF",
     "status": "Status",
@@ -95,5 +96,12 @@
     "actions": "Ações",
     "confirm": "Confirmar",
     "confirm_label": "Confirmar agendamento {{id}}"
+  },
+  "payment": {
+    "title": "Pagamento",
+    "amount": "Valor",
+    "pay_now": "Pagar Agora",
+    "success": "Pagamento realizado com sucesso",
+    "error": "Erro ao processar pagamento"
   }
 }
