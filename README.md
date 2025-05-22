@@ -1,4 +1,3 @@
-// Salvar em: README.md
 # Odonto RTL
 
 Sistema web para clínicas odontológicas, com funcionalidades para administração, agendamento, finanças, odontograma, estoque, marketing, manutenção, visitantes e satisfação do paciente.
