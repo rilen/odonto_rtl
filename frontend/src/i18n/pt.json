@@ -11,6 +11,7 @@
     "cpf": "CPF",
     "status": "Status",
     "active": "Ativo",
+    "inactive": "Inativo",
     "patient": "Paciente",
     "amount": "Valor",
     "attendance": "Atendimento",
@@ -23,7 +24,11 @@
     "previous": "Anterior",
     "next": "Próximo",
     "pagination": "Navegação de páginas",
-    "finance_chart": "Gráfico de valores financeiros por paciente"
+    "finance_chart": "Gráfico de valores financeiros por paciente",
+    "start_date": "Data de Início",
+    "end_date": "Data de Fim",
+    "status_filter": "Filtro de Status",
+    "all_status": "Todos os Status"
   },
   "login": {
     "title": "Login",
