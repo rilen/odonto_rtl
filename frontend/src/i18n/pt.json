@@ -111,5 +111,8 @@
     "pay_now": "Pagar Agora",
     "success": "Pagamento realizado com sucesso",
     "error": "Erro ao processar pagamento"
+  },
+  "notifications": {
+    "whatsapp_confirmation": "Agendamento confirmado! Você receberá um lembrete via WhatsApp 24 horas antes."
   }
 }
