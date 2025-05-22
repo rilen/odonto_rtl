@@ -1,3 +1,5 @@
+const formidable = require('formidable');
+app.use(formidable());
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const sqlite3 = require('sqlite3').verbose();
