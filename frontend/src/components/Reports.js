@@ -59,6 +59,22 @@ const Reports = ({ userRole }) => {
     setPage(1);
   };
 
+  const exportToCSV = (data, filename, headers) => {
+    const csvRows = [headers.join(',')];
+    data.forEach(item => {
+      const values = headers.map(header => `"${item[header.toLowerCase()] || ''}"`);
+      csvRows.push(values.join(','));
+    });
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `${filename}.csv`);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const generatePatientReport = () => {
     const doc = new jsPDF();
     doc.text(t('reports.patient_report'), 10, 10);
@@ -68,13 +84,21 @@ const Reports = ({ userRole }) => {
     doc.save('relatorio_pacientes.pdf');
   };
 
+  const exportPatientCSV = () => {
+    exportToCSV(patients, 'relatorio_pacientes', ['Name', 'CPF', 'Status']);
+  };
+
   const generateFinanceReport = () => {
     const doc = new jsPDF();
     doc.text(t('reports.finance_report'), 10, 10);
     finances.forEach((f, i) => {
-       doc.text(`Paciente: ${f.patient_id}, Valor: R$${f.amount}, Status: ${f.status}`, 10, 20 + i * 10);
+      doc.text(`Paciente: ${f.patient_id}, Valor: R$${f.amount}, Status: ${f.status}`, 10, 20 + i * 10);
     });
     doc.save('relatorio_financeiro.pdf');
+  };
+
+  const exportFinanceCSV = () => {
+    exportToCSV(finances, 'relatorio_financeiro', ['Patient_ID', 'Amount', 'Status']);
   };
 
   const generateSurveyReport = () => {
@@ -86,6 +110,10 @@ const Reports = ({ userRole }) => {
     doc.save('relatorio_satisfacao.pdf');
   };
 
+  const exportSurveyCSV = () => {
+    exportToCSV(surveys, 'relatorio_satisfacao', ['Patient_ID', 'Attendance', 'Comfort', 'Pain', 'Confidence']);
+  };
+
   const generateMaintenanceReport = () => {
     const doc = new jsPDF();
     doc.text(t('reports.maintenance_report'), 10, 10);
@@ -93,6 +121,10 @@ const Reports = ({ userRole }) => {
       doc.text(`Equipamento: ${m.equipment}, Fornecedor: ${m.supplier}, Data: ${m.date}`, 10, 20 + i * 10);
     });
     doc.save('relatorio_manutencao.pdf');
+  };
+
+  const exportMaintenanceCSV = () => {
+    exportToCSV(maintenances, 'relatorio_manutencao', ['Equipment', 'Supplier', 'Date']);
   };
 
   return (
@@ -130,7 +162,10 @@ const Reports = ({ userRole }) => {
       {['secretary', 'dentist'].includes(userRole) && (
         <section className="mb-6" aria-labelledby="patient-report">
           <h3 id="patient-report" className="text-lg font-semibold mb-2">{t('reports.patient_report')}</h3>
-          <button onClick={generatePatientReport} className="button mb-4">{t('reports.generate_pdf')}</button>
+          <div className="flex space-x-2 mb-4">
+            <button onClick={generatePatientReport} className="button">{t('reports.generate_pdf')}</button>
+            <button onClick={exportPatientCSV} className="button">{t('reports.generate_csv')}</button>
+          </div>
           <table className="table" aria-describedby="patient-report">
             <thead>
               <tr><th scope="col">{t('reports.name')}</th><th scope="col">{t('reports.cpf')}</th><th scope="col">{t('reports.status')}</th></tr>
@@ -150,7 +185,10 @@ const Reports = ({ userRole }) => {
       {['finance', 'secretary'].includes(userRole) && (
         <section className="mb-6" aria-labelledby="finance-report">
           <h3 id="finance-report" className="text-lg font-semibold mb-2">{t('reports.finance_report')}</h3>
-          <button onClick={generateFinanceReport} className="button mb-4">{t('reports.generate_pdf')}</button>
+          <div className="flex space-x-2 mb-4">
+            <button onClick={generateFinanceReport} className="button">{t('reports.generate_pdf')}</button>
+            <button onClick={exportFinanceCSV} className="button">{t('reports.generate_csv')}</button>
+          </div>
           <canvas id="financeChart" className="mb-4" aria-label={t('reports.finance_chart')} role="img"></canvas>
           <table className="table" aria-describedby="finance-report">
             <thead>
@@ -173,7 +211,10 @@ const Reports = ({ userRole }) => {
       {['secretary', 'dentist'].includes(userRole) && (
         <section className="mb-6" aria-labelledby="survey-report">
           <h3 id="survey-report" className="text-lg font-semibold mb-2">{t('reports.survey_report')}</h3>
-          <button onClick={generateSurveyReport} className="button mb-4">{t('reports.generate_pdf')}</button>
+          <div className="flex space-x-2 mb-4">
+            <button onClick={generateSurveyReport} className="button">{t('reports.generate_pdf')}</button>
+            <button onClick={exportSurveyCSV} className="button">{t('reports.generate_csv')}</button>
+          </div>
           <table className="table" aria-describedby="survey-report">
             <thead>
               <tr><th scope="col">{t('reports.patient')}</th><th scope="col">{t('reports.attendance')}</th><th scope="col">{t('reports.comfort')}</th><th scope="col">{t('reports.pain')}</th><th scope="col">{t('reports.confidence')}</th></tr>
@@ -193,7 +234,10 @@ const Reports = ({ userRole }) => {
       {['secretary', 'dentist'].includes(userRole) && (
         <section aria-labelledby="maintenance-report">
           <h3 id="maintenance-report" className="text-lg font-semibold mb-2">{t('reports.maintenance_report')}</h3>
-          <button onClick={generateMaintenanceReport} className="button mb-4">{t('reports.generate_pdf')}</button>
+          <div className="flex space-x-2 mb-4">
+            <button onClick={generateMaintenanceReport} className="button">{t('reports.generate_pdf')}</button>
+            <button onClick={exportMaintenanceCSV} className="button">{t('reports.generate_csv')}</button>
+          </div>
           <table className="table" aria-describedby="maintenance-report">
             <thead>
               <tr><th scope="col">{t('reports.equipment')}</th><th scope="col">{t('reports.supplier')}</th><th scope="col">{t('reports.date')}</th></tr>
