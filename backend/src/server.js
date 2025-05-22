@@ -3,6 +3,7 @@ const express = require('express');
 const formidable = require('formidable');
 const http = require('http');
 const { setupWebSocket } = require('./services/websocket');
+const { startScheduler } = require('./services/scheduler');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,7 +27,9 @@ app.use('/api/reports', require('./middleware/auth'), require('./middleware/audi
 app.use('/api/twofactor', require('./middleware/auth'), require('./middleware/audit'), require('./routes/twofactor'));
 app.use('/api/push', require('./middleware/auth'), require('./middleware/audit'), require('./routes/push'));
 app.use('/api/stripe', require('./routes/stripe'));
+app.use('/api/audit', require('./middleware/auth'), require('./middleware/audit'), require('./routes/audit'));
 
 setupWebSocket(server);
+startScheduler();
 
 server.listen(3000, () => console.log('Servidor rodando na porta 3000'));
