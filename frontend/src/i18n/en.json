@@ -1,0 +1,40 @@
+// Salvar em: frontend/src/i18n/en.json
+{
+  "reports": {
+    "title": "Reports",
+    "patient_report": "Patient Report",
+    "finance_report": "Financial Report",
+    "survey_report": "Satisfaction Report",
+    "maintenance_report": "Maintenance Report",
+    "generate_pdf": "Generate PDF",
+    "name": "Name",
+    "cpf": "CPF",
+    "status": "Status",
+    "active": "Active",
+    "patient": "Patient",
+    "amount": "Amount",
+    "attendance": "Attendance",
+    "comfort": "Comfort",
+    "pain": "Pain",
+    "confidence": "Confidence",
+    "equipment": "Equipment",
+    "supplier": "Supplier",
+    "date": "Date",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "login": {
+    "title": "Login",
+    "cpf": "CPF",
+    "password": "Password",
+    "login": "Login"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "appointments": "Appointments",
+    "patients": "Patients",
+    "finance": "Finance",
+    "stock": "Stock",
+    "reports": "Reports"
+  }
+}
