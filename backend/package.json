@@ -5,18 +5,18 @@
   "scripts": {
     "start": "node src/server.js"
   },
-"dependencies": {
-  "express": "^4.17.1",
-  "pg": "^8.7.3",
-  "nodemailer": "^6.7.5",
-  "twilio": "^3.77.0",
-  "web-push": "^3.4.5",
-  "speakeasy": "^2.0.0",
-  "jsonwebtoken": "^8.5.1",
-  "bcryptjs": "^2.4.3",
-  "node-cache": "^5.1.2",
-  "formidable": "^2.0.1"
-},
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.7.3",
+    "nodemailer": "^6.7.5",
+    "twilio": "^3.77.0",
+    "web-push": "^3.4.5",
+    "speakeasy": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "bcryptjs": "^2.4.3",
+    "node-cache": "^5.1.2",
+    "formidable": "^2.0.1"
+  },
   "devDependencies": {
     "mocha": "^10.0.0",
     "chai": "^4.3.6",
