@@ -1,14 +1,14 @@
-/* Salvar em: frontend/src/styles.css */
+// Salvar em: frontend/src/styles.css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100 font-sans;
+  @apply bg-gray-50 font-sans text-gray-800;
 }
 
 .sidebar {
-  @apply fixed inset-y-0 left-0 w-64 bg-gray-800 text-white transform transition-transform md:translate-x-0;
+  @apply fixed inset-y-0 left-0 w-64 bg-indigo-900 text-white transform transition-transform duration-300 ease-in-out md:translate-x-0 z-50;
 }
 
 .sidebar-closed {
@@ -16,30 +16,41 @@ body {
 }
 
 .container {
-  @apply max-w-7xl mx-auto p-4;
+  @apply max-w-7xl mx-auto p-6 sm:p-4;
 }
 
 .table {
-  @apply w-full border-collapse border border-gray-300;
+  @apply w-full border-collapse border border-gray-200 shadow-sm rounded-lg;
 }
 
 .table th, .table td {
-  @apply border border-gray-300 p-2 text-left;
+  @apply border border-gray-200 p-3 text-sm sm:p-2;
+}
+
+.table th {
+  @apply bg-indigo-100 text-indigo-900 font-semibold;
 }
 
 .button {
-  @apply bg-blue-500 text-white p-2 rounded hover:bg-blue-600;
+  @apply bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200;
 }
 
 .input {
-  @apply border border-gray-300 p-2 rounded w-full;
+  @apply border border-gray-300 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.alert {
+  @apply bg-red-100 text-red-800 p-3 rounded-lg;
 }
 
 @media (max-width: 768px) {
   .sidebar {
-    @apply w-full;
+    @apply w-3/4;
   }
   .container {
-    @apply p-2;
+    @apply p-3;
+  }
+  .table th, .table td {
+    @apply text-xs p-2;
   }
 }
