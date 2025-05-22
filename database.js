@@ -64,6 +64,14 @@ pool.query(`
     notes TEXT,
     date TEXT
   );
+
+CREATE TABLE IF NOT EXISTS maintenance (
+    id SERIAL PRIMARY KEY,
+    equipment TEXT,
+    supplier TEXT,
+    date TEXT
+  );
+  
 `);
 
 module.exports = pool;
