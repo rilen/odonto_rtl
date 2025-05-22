@@ -111,5 +111,8 @@
     "pay_now": "Pay Now",
     "success": "Payment processed successfully",
     "error": "Error processing payment"
+  },
+  "notifications": {
+    "whatsapp_confirmation": "Appointment confirmed! You will receive a WhatsApp reminder 24 hours before."
   }
 }
