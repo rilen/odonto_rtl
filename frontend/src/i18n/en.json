@@ -55,9 +55,15 @@
   },
   "admin": {
     "title": "User Management",
+    "user_management": "User Management",
+    "audit_logs": "Audit Logs",
     "name": "Name",
     "role": "Role",
     "actions": "Actions",
+    "user_id": "User ID",
+    "action": "Action",
+    "details": "Details",
+    "timestamp": "Date and Time",
     "admin": "Administrator",
     "secretary": "Secretary",
     "dentist": "Dentist",
@@ -80,7 +86,9 @@
     "title": "Finance",
     "patient": "Patient",
     "amount": "Amount",
-    "status": "Status"
+    "status": "Status",
+    "actions": "Actions",
+    "pay": "Pay"
   },
   "patient": {
     "title": "My Appointments",
