@@ -18,6 +18,7 @@ pool.query(`
     address TEXT,
     phone TEXT,
     email TEXT,
+    google_access_token TEXT,
     locked BOOLEAN DEFAULT FALSE,
     two_factor_secret TEXT
   );
