@@ -1,63 +1,39 @@
 // Salvar em: backend/src/routes/appointments.js
 const express = require('express');
 const router = express.Router();
-const Appointment = require('../models/Appointment');
-const { createEvent } = require('../services/googleCalendar');
+const pool = require('../database');
 const auth = require('../middleware/auth');
-
-router.post('/', auth, async (req, res) => {
-  const { patient_id, dentist_id, date, type, status, confirmed, accessToken } = req.body;
-  try {
-    const appointment = await Appointment.create({ patient_id, dentist_id, date, type, status, confirmed });
-    if (accessToken) {
-      const event = await createEvent({ patient_id, dentist_id, date, type, accessToken });
-      appointment.googleEventId = event.id;
-    }
-    res.status(201).json(appointment);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+const { sendWhatsAppMessage } = require('../services/whatsapp');
 
 router.get('/', auth, async (req, res) => {
-  const { patient_id } = req.query;
-  try {
-    const appointments = patient_id
-      ? await Appointment.findAll({ where: { patient_id } })
-      : await Appointment.findAll();
-    res.json(appointments);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const { rows } = await pool.query('SELECT * FROM appointments WHERE patient_id = $1 OR dentist_id = $1', [req.user.id]);
+  res.json(rows);
 });
 
-router.get('/:id', auth, async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-    if (!appointment) return res.status(404).json({ error: 'Agendamento não encontrado' });
-    res.json(appointment);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+router.post('/', auth, async (req, res) => {
+  const { patient_id, dentist_id, date, type } = req.body;
+  const { rows } = await pool.query(
+    'INSERT INTO appointments (patient_id, dentist_id, date, type, status) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [patient_id, dentist_id, date, type, 'pending']
+  );
+  res.json(rows[0]);
 });
 
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const appointment = await Appointment.update(req.params.id, req.body);
-    if (!appointment) return res.status(404).json({ error: 'Agendamento não encontrado' });
-    res.json(appointment);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.put('/:id/confirm', auth, async (req, res) => {
+  const { id } = req.params;
+  const { rows } = await pool.query(
+    'UPDATE appointments SET status = $1, confirmed = $2 WHERE id = $3 RETURNING *',
+    ['confirmed', true, id]
+  );
 
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    await Appointment.delete(req.params.id);
-    res.status(204).send();
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (rows.length > 0) {
+    const appt = rows[0];
+    const user = await pool.query('SELECT name, phone FROM users WHERE id = $1', [appt.patient_id]);
+    const message = `Olá ${user.rows[0].name}, seu agendamento de ${appt.type} para ${new Date(appt.date).toLocaleString('pt-BR')} foi confirmado!`;
+    await sendWhatsAppMessage(user.rows[0].phone, message);
   }
+
+  res.json(rows[0]);
 });
 
 module.exports = router;
