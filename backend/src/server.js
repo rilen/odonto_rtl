@@ -6,9 +6,15 @@ const { setupWebSocket } = require('./services/websocket');
 const app = express();
 const server = http.createServer(app);
 
-app.get('/', (req, res) => {
-  res.send('Servidor rodando! 🚀');
+//app.get('/', (req, res) => {
+//  res.send('Servidor rodando! 🚀');
+//});
+
+app.use(express.static('frontend/build'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
 });
+
 
 
 app.use(require('./middleware/security'));
