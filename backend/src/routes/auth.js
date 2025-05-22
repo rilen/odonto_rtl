@@ -1,30 +1,46 @@
+// Salvar em: backend/src/routes/auth.js
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const pool = require('../database');
+const jwt = require('jsonwebtoken');
+const { google } = require('googleapis');
 require('dotenv').config();
 
-router.post('/', async (req, res) => {
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+router.post('/login', async (req, res) => {
   const { cpf, password } = req.body;
-  const { rows } = await pool.query('SELECT * FROM users WHERE cpf = $1', [cpf]);
-  if (!rows.length) return res.status(401).json({ error: 'Usuário não encontrado' });
-  if (rows[0].locked) return res.status(403).json({ error: 'Conta bloqueada' });
-  const isValid = await bcrypt.compare(password, rows[0].password);
-  if (!isValid) {
-    await pool.query('INSERT INTO login_attempts (cpf, timestamp) VALUES ($1, $2)', [cpf, Date.now()]);
-    const attempts = await pool.query('SELECT COUNT(*) FROM login_attempts WHERE cpf = $1 AND timestamp > $2', [cpf, Date.now() - 3600000]);
-    if (parseInt(attempts.rows[0].count) >= 3) {
-      await pool.query('UPDATE users SET locked = TRUE WHERE cpf = $1', [cpf]);
-      return res.status(403).json({ error: 'Conta bloqueada' });
-    }
-    return res.status(401).json({ error: 'Senha inválida' });
+  const user = await User.findByCpf(cpf);
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(401).json({ error: 'Credenciais inválidas' });
   }
-  const token = jwt.sign({ userId: rows[0].id, role: rows[0].role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  if (rows[0].two_factor_secret) {
-    return res.json({ twoFactorRequired: true, userId: rows[0].id });
+  const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.json({ token, user });
+});
+
+router.get('/google', (req, res) => {
+  const url = oauth2Client.generateAuthUrl({
+    scope: ['https://www.googleapis.com/auth/calendar'],
+    state: encodeURIComponent(JSON.stringify({ userId: req.query.userId })),
+  });
+  res.redirect(url);
+});
+
+router.get('/google/callback', async (req, res) => {
+  const { code, state } = req.query;
+  const { userId } = JSON.parse(decodeURIComponent(state));
+  try {
+    const { tokens } = await oauth2Client.getToken(code);
+    await User.update(userId, { googleAccessToken: tokens.access_token });
+    res.redirect(`${process.env.FRONTEND_URL}/calendar?success=true`);
+  } catch (err) {
+    res.redirect(`${process.env.FRONTEND_URL}/calendar?error=${err.message}`);
   }
-  res.json({ token });
 });
 
 module.exports = router;
