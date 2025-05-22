@@ -1,3 +1,4 @@
+// Salvar em: frontend/src/i18n/pt.json
 {
   "reports": {
     "title": "Relatórios",
@@ -36,7 +37,9 @@
     "patients": "Pacientes",
     "finance": "Financeiro",
     "stock": "Estoque",
-    "reports": "Relatórios"
+    "reports": "Relatórios",
+    "light": "Claro",
+    "dark": "Escuro"
   },
   "chat": {
     "title": "Chat",
