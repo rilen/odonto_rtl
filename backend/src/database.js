@@ -99,6 +99,12 @@ pool.query(`
     pain INTEGER,
     confidence INTEGER
   );
+
+    CREATE TABLE IF NOT EXISTS push_subscriptions (
+    user_id INTEGER PRIMARY KEY REFERENCES users(id),
+    subscription TEXT
+  );
+  
 `);
 
 module.exports = pool;
