@@ -1,47 +1,47 @@
 // Salvar em: frontend/src/App.js
-import React, { useState, Suspense } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import Dashboard from './components/Dashboard';
 import Login from './components/Login';
-import VisitorForm from './components/VisitorForm';
+import Reports from './components/Reports';
+import Chat from './components/Chat';
+import Admin from './pages/Admin';
+import Assistant from './pages/Assistant';
 import Secretary from './pages/Secretary';
 import Finance from './pages/Finance';
 import Dentist from './pages/Dentist';
 import Patient from './pages/Patient';
-import Visitor from './pages/Visitor';
-import './styles.css';
-
-const Dashboard = React.lazy(() => import('./components/Dashboard'));
-const Reports = React.lazy(() => import('./components/Reports'));
-const Odontogram = React.lazy(() => import('./components/Odontogram'));
+import { useTranslation } from 'react-i18next';
 
 const App = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const { t } = useTranslation();
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
 
   return (
-    <Router>
-      <div className="flex min-h-screen">
-        <div className={`sidebar ${!isSidebarOpen ? 'sidebar-closed' : ''}`}>
-          <Sidebar />
+    <div className={theme}>
+      <Router>
+        <Sidebar toggleTheme={toggleTheme} theme={theme} />
+        <div className="md:ml-64">
+          <Switch>
+            <Route exact path="/" component={Dashboard} />
+            <Route path="/login" component={Login} />
+            <Route path="/reports" render={(props) => <Reports {...props} userRole="secretary" />} />
+            <Route path="/chat" render={(props) => <Chat {...props} userId={1} userRole="secretary" />} />
+            <Route path="/admin" component={Admin} />
+            <Route path="/assistant" component={Assistant} />
+            <Route path="/secretary" component={Secretary} />
+            <Route path="/finance" component={Finance} />
+            <Route path="/dentist" component={Dentist} />
+            <Route path="/patient" render={(props) => <Patient {...props} userId={1} />} />
+          </Switch>
         </div>
-        <div className="flex-1 container">
-          <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="md:hidden button mb-4">Menu</button>
-          <Suspense fallback={<div className="text-center p-4">Carregando...</div>}>
-            <Switch>
-              <Route path="/login" component={Login} />
-              <Route path="/visitor" component={VisitorForm} />
-              <Route path="/secretary" component={Secretary} />
-              <Route path="/finance" component={Finance} />
-              <Route path="/dentist" component={Dentist} />
-              <Route path="/patient" component={Patient} />
-              <Route path="/reports" component={Reports} />
-              <Route path="/odontogram" component={Odontogram} />
-              <Route path="/" component={Dashboard} />
-            </Switch>
-          </Suspense>
-        </div>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 };
 
