@@ -1,3 +1,4 @@
+// Salvar em: backend/src/database.js
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -17,14 +18,17 @@ pool.query(`
     address TEXT,
     phone TEXT,
     email TEXT,
-    locked BOOLEAN DEFAULT FALSE
+    locked BOOLEAN DEFAULT FALSE,
+    two_factor_secret TEXT
   );
+  CREATE INDEX IF NOT EXISTS idx_users_cpf ON users(cpf);
 
   CREATE TABLE IF NOT EXISTS login_attempts (
     id SERIAL PRIMARY KEY,
     cpf VARCHAR(14),
     timestamp BIGINT
   );
+  CREATE INDEX IF NOT EXISTS idx_login_attempts_cpf ON login_attempts(cpf);
 
   CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
@@ -35,6 +39,7 @@ pool.query(`
     status TEXT,
     confirmed BOOLEAN DEFAULT FALSE
   );
+  CREATE INDEX IF NOT EXISTS idx_appointments_patient_id ON appointments(patient_id);
 
   CREATE TABLE IF NOT EXISTS payments (
     id SERIAL PRIMARY KEY,
@@ -45,6 +50,7 @@ pool.query(`
     receipt_number TEXT,
     date TEXT
   );
+  CREATE INDEX IF NOT EXISTS idx_payments_patient_id ON payments(patient_id);
 
   CREATE TABLE IF NOT EXISTS stock (
     id SERIAL PRIMARY KEY,
@@ -53,6 +59,7 @@ pool.query(`
     critical_level INTEGER,
     category TEXT
   );
+  CREATE INDEX IF NOT EXISTS idx_stock_item_name ON stock(item_name);
 
   CREATE TABLE IF NOT EXISTS odontogram (
     id SERIAL PRIMARY KEY,
@@ -64,14 +71,34 @@ pool.query(`
     notes TEXT,
     date TEXT
   );
+  CREATE INDEX IF NOT EXISTS idx_odontogram_patient_id ON odontogram(patient_id);
 
-CREATE TABLE IF NOT EXISTS maintenance (
+  CREATE TABLE IF NOT EXISTS maintenance (
     id SERIAL PRIMARY KEY,
     equipment TEXT,
     supplier TEXT,
     date TEXT
   );
-  
+
+  CREATE TABLE IF NOT EXISTS visitors (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    age INTEGER,
+    cpf VARCHAR(14) UNIQUE,
+    address TEXT,
+    phone TEXT,
+    email TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS surveys (
+    id SERIAL PRIMARY KEY,
+    appointment_id INTEGER REFERENCES appointments(id),
+    patient_id INTEGER REFERENCES users(id),
+    attendance INTEGER,
+    comfort INTEGER,
+    pain INTEGER,
+    confidence INTEGER
+  );
 `);
 
 module.exports = pool;
