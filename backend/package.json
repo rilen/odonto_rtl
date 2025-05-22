@@ -15,7 +15,10 @@
     "jsonwebtoken": "^8.5.1",
     "bcryptjs": "^2.4.3",
     "node-cache": "^5.1.2",
-    "formidable": "^2.0.1"
+    "formidable": "^2.0.1",
+    "helmet": "^7.0.0",
+  "express-rate-limit": "^6.7.0",
+  "cors": "^2.8.5"
   },
   "devDependencies": {
     "mocha": "^10.0.0",
