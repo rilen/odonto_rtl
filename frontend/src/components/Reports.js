@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import { useTranslation } from 'react-i18next';
+import Chart from 'chart.js/auto';
 
 const Reports = ({ userRole }) => {
   const { t } = useTranslation();
@@ -23,6 +24,26 @@ const Reports = ({ userRole }) => {
       axios.get(`/api/reports/payments?page=${page}&pageSize=${pageSize}`).then(res => setFinances(res.data));
     }
   }, [userRole, page]);
+
+  useEffect(() => {
+    if (finances.length > 0) {
+      const ctx = document.getElementById('financeChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: finances.map(f => f.patient_id),
+          datasets: [{
+            label: t('reports.amount'),
+            data: finances.map(f => f.amount),
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    }
+  }, [finances, t]);
 
   const generatePatientReport = () => {
     const doc = new jsPDF();
@@ -61,15 +82,15 @@ const Reports = ({ userRole }) => {
   };
 
   return (
-    <div className="container">
+    <div className="container" role="region" aria-label={t('reports.title')}>
       <h2 className="text-2xl font-bold mb-6">{t('reports.title')}</h2>
       {['secretary', 'dentist'].includes(userRole) && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t('reports.patient_report')}</h3>
+        <section className="mb-6" aria-labelledby="patient-report">
+          <h3 id="patient-report" className="text-lg font-semibold mb-2">{t('reports.patient_report')}</h3>
           <button onClick={generatePatientReport} className="button mb-4">{t('reports.generate_pdf')}</button>
-          <table className="table">
+          <table className="table" aria-describedby="patient-report">
             <thead>
-              <tr><th>{t('reports.name')}</th><th>{t('reports.cpf')}</th><th>{t('reports.status')}</th></tr>
+              <tr><th scope="col">{t('reports.name')}</th><th scope="col">{t('reports.cpf')}</th><th scope="col">{t('reports.status')}</th></tr>
             </thead>
             <tbody>
               {patients.map(p => (
@@ -77,19 +98,20 @@ const Reports = ({ userRole }) => {
               ))}
             </tbody>
           </table>
-          <div className="mt-4 flex justify-between">
-            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button">{t('reports.previous')}</button>
+          <nav className="mt-4 flex justify-between" aria-label={t('reports.pagination')}>
+            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button" disabled={page === 1}>{t('reports.previous')}</button>
             <button onClick={() => setPage(p => p + 1)} className="button">{t('reports.next')}</button>
-          </div>
-        </div>
+          </nav>
+        </section>
       )}
       {['finance', 'secretary'].includes(userRole) && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t('reports.finance_report')}</h3>
+        <section className="mb-6" aria-labelledby="finance-report">
+          <h3 id="finance-report" className="text-lg font-semibold mb-2">{t('reports.finance_report')}</h3>
           <button onClick={generateFinanceReport} className="button mb-4">{t('reports.generate_pdf')}</button>
-          <table className="table">
+          <canvas id="financeChart" className="mb-4" aria-label={t('reports.finance_chart')} role="img"></canvas>
+          <table className="table" aria-describedby="finance-report">
             <thead>
-              <tr><th>{t('reports.patient')}</th><th>{t('reports.amount')}</th><th>{t('reports.status')}</th></tr>
+              <tr><th scope="col">{t('reports.patient')}</th><th scope="col">{t('reports.amount')}</th><th scope="col">{t('reports.status')}</th></tr>
             </thead>
             <tbody>
               {finances.map(f => (
@@ -99,19 +121,19 @@ const Reports = ({ userRole }) => {
               ))}
             </tbody>
           </table>
-          <div className="mt-4 flex justify-between">
-            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button">{t('reports.previous')}</button>
+          <nav className="mt-4 flex justify-between" aria-label={t('reports.pagination')}>
+            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button" disabled={page === 1}>{t('reports.previous')}</button>
             <button onClick={() => setPage(p => p + 1)} className="button">{t('reports.next')}</button>
-          </div>
-        </div>
+          </nav>
+        </section>
       )}
       {['secretary', 'dentist'].includes(userRole) && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t('reports.survey_report')}</h3>
+        <section className="mb-6" aria-labelledby="survey-report">
+          <h3 id="survey-report" className="text-lg font-semibold mb-2">{t('reports.survey_report')}</h3>
           <button onClick={generateSurveyReport} className="button mb-4">{t('reports.generate_pdf')}</button>
-          <table className="table">
+          <table className="table" aria-describedby="survey-report">
             <thead>
-              <tr><th>{t('reports.patient')}</th><th>{t('reports.attendance')}</th><th>{t('reports.comfort')}</th><th>{t('reports.pain')}</th><th>{t('reports.confidence')}</th></tr>
+              <tr><th scope="col">{t('reports.patient')}</th><th scope="col">{t('reports.attendance')}</th><th scope="col">{t('reports.comfort')}</th><th scope="col">{t('reports.pain')}</th><th scope="col">{t('reports.confidence')}</th></tr>
             </thead>
             <tbody>
               {surveys.map(s => (
@@ -119,19 +141,19 @@ const Reports = ({ userRole }) => {
               ))}
             </tbody>
           </table>
-          <div className="mt-4 flex justify-between">
-            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button">{t('reports.previous')}</button>
+          <nav className="mt-4 flex justify-between" aria-label={t('reports.pagination')}>
+            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button" disabled={page === 1}>{t('reports.previous')}</button>
             <button onClick={() => setPage(p => p + 1)} className="button">{t('reports.next')}</button>
-          </div>
-        </div>
+          </nav>
+        </section>
       )}
       {['secretary', 'dentist'].includes(userRole) && (
-        <div>
-          <h3 className="text-lg font-semibold mb-2">{t('reports.maintenance_report')}</h3>
+        <section aria-labelledby="maintenance-report">
+          <h3 id="maintenance-report" className="text-lg font-semibold mb-2">{t('reports.maintenance_report')}</h3>
           <button onClick={generateMaintenanceReport} className="button mb-4">{t('reports.generate_pdf')}</button>
-          <table className="table">
+          <table className="table" aria-describedby="maintenance-report">
             <thead>
-              <tr><th>{t('reports.equipment')}</th><th>{t('reports.supplier')}</th><th>{t('reports.date')}</th></tr>
+              <tr><th scope="col">{t('reports.equipment')}</th><th scope="col">{t('reports.supplier')}</th><th scope="col">{t('reports.date')}</th></tr>
             </thead>
             <tbody>
               {maintenances.map(m => (
@@ -139,11 +161,11 @@ const Reports = ({ userRole }) => {
               ))}
             </tbody>
           </table>
-          <div className="mt-4 flex justify-between">
-            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button">{t('reports.previous')}</button>
+          <nav className="mt-4 flex justify-between" aria-label={t('reports.pagination')}>
+            <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="button" disabled={page === 1}>{t('reports.previous')}</button>
             <button onClick={() => setPage(p => p + 1)} className="button">{t('reports.next')}</button>
-          </div>
-        </div>
+          </nav>
+        </section>
       )}
     </div>
   );
