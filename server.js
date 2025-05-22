@@ -28,4 +28,6 @@ app.post('/login', (req, res) => {
     res.json({ token });
   });
 });
+app.use('/api/marketing', require('./src/routes/marketing'));
+app.use('/api/maintenance', require('./src/routes/maintenance'));
 app.listen(3000, () => console.log('Server running on port 3000'));
