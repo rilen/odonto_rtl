@@ -1,9 +1,13 @@
 // Salvar em: backend/src/server.js
 const express = require('express');
 const formidable = require('formidable');
-const app = express();
+const http = require('http');
+const { setupWebSocket } = require('./services/websocket');
 
-app.use(require('./middleware/security')); // Aplica middlewares de segurança
+const app = express();
+const server = http.createServer(app);
+
+app.use(require('./middleware/security'));
 app.use(express.json());
 app.use(formidable());
 app.use('/api/auth', require('./routes/auth'));
@@ -22,4 +26,6 @@ app.use('/api/reports', require('./routes/reports'));
 app.use('/api/twofactor', require('./routes/twofactor'));
 app.use('/api/push', require('./routes/push'));
 
-app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
+setupWebSocket(server);
+
+server.listen(3000, () => console.log('Servidor rodando na porta 3000'));
