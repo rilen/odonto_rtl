@@ -3,6 +3,7 @@ import { jsPDF } from 'jspdf';
 
 const Odontogram = ({ patientId }) => {
   const [teeth, setTeeth] = useState(Array(32).fill({ condition: '', material: '', notes: '' }));
+  const [selectedTooth, setSelectedTooth] = useState(null);
 
   const updateTooth = (index, field, value) => {
     const newTeeth = [...teeth];
@@ -27,34 +28,50 @@ const Odontogram = ({ patientId }) => {
   return (
     <div className="p-4">
       <h2 className="text-xl mb-4">Odontograma</h2>
-      <div className="grid grid-cols-8 gap-2">
-        {teeth.map((tooth, i) => (
-          <div key={i} className="p-2 border">
-            <p>Dente {i + 1}</p>
-            <select onChange={(e) => updateTooth(i, 'condition', e.target.value)} value={tooth.condition}>
-              <option value="">Selecione</option>
-              <option value="caries">Cárie</option>
-              <option value="restoration">Restauração</option>
-              <option value="extraction">Extração</option>
-              <option value="implant">Implante</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Material"
-              value={tooth.material}
-              onChange={(e) => updateTooth(i, 'material', e.target.value)}
-              className="border p-1 mt-2 w-full"
-            />
-            <textarea
-              placeholder="Notas"
-              value={tooth.notes}
-              onChange={(e) => updateTooth(i, 'notes', e.target.value)}
-              className="border p-1 mt-2 w-full"
-            />
-          </div>
+      <svg width="400" height="200" viewBox="0 0 400 200" className="mb-4">
+        {Array(32).fill().map((_, i) => (
+          <rect
+            key={i}
+            x={(i % 16) * 25}
+            y={i < 16 ? 10 : 110}
+            width="20"
+            height="40"
+            fill={selectedTooth === i ? 'yellow' : 'white'}
+            stroke="black"
+            onClick={() => setSelectedTooth(i)}
+          />
         ))}
-      </div>
-      <button onClick={exportPDF} className="mt-4 bg-blue-500 text-white p-2">Exportar PDF</button>
+      </svg>
+      {selectedTooth !== null && (
+        <div className="border p-4">
+          <h3>Dente {selectedTooth + 1}</h3>
+          <select
+            onChange={(e) => updateTooth(selectedTooth, 'condition', e.target.value)}
+            value={teeth[selectedTooth].condition}
+            className="border p-1 w-full"
+          >
+            <option value="">Selecione</option>
+            <option value="caries">Cárie</option>
+            <option value="restoration">Restauração</option>
+            <option value="extraction">Extração</option>
+            <option value="implant">Implante</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Material"
+            value={teeth[selectedTooth].material}
+            onChange={(e) => updateTooth(selectedTooth, 'material', e.target.value)}
+            className="border p-1 mt-2 w-full"
+          />
+          <textarea
+            placeholder="Notas"
+            value={teeth[selectedTooth].notes}
+            onChange={(e) => updateTooth(selectedTooth, 'notes', e.target.value)}
+            className="border p-1 mt-2 w-full"
+          />
+        </div>
+      )}
+      <button onClick={exportPDF} className="bg-blue-500 text-white p-2 mt-4">Exportar PDF</button>
     </div>
   );
 };
