@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const Sidebar = () => {
+const Sidebar = ({ toggleTheme, theme }) => {
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -11,7 +11,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-full p-4">
+    <div className="h-full p-4 sidebar">
       <h2 className="text-xl font-bold mb-4">Odonto RTL</h2>
       <nav className="space-y-2">
         <Link to="/" className="block text-white hover:bg-indigo-700 p-2 rounded">{t('sidebar.dashboard')}</Link>
@@ -23,7 +23,8 @@ const Sidebar = () => {
       </nav>
       <div className="mt-4">
         <button onClick={() => changeLanguage('pt')} className="button mr-2">PT</button>
-        <button onClick={() => changeLanguage('en')} className="button">EN</button>
+        <button onClick={() => changeLanguage('en')} className="button mr-2">EN</button>
+        <button onClick={toggleTheme} className="button">{theme === 'light' ? t('sidebar.dark') : t('sidebar.light')}</button>
       </div>
     </div>
   );
