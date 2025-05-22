@@ -13,17 +13,26 @@ const Reports = ({ userRole }) => {
   const [maintenances, setMaintenances] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
+  const [filters, setFilters] = useState({ startDate: '', endDate: '', status: '' });
 
   useEffect(() => {
+    const query = new URLSearchParams({
+      page,
+      pageSize,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      status: filters.status,
+    }).toString();
+
     if (['secretary', 'dentist'].includes(userRole)) {
-      axios.get(`/api/reports/patients?page=${page}&pageSize=${pageSize}`).then(res => setPatients(res.data));
-      axios.get(`/api/reports/surveys?page=${page}&pageSize=${pageSize}`).then(res => setSurveys(res.data));
-      axios.get(`/api/reports/maintenance?page=${page}&pageSize=${pageSize}`).then(res => setMaintenances(res.data));
+      axios.get(`/api/reports/patients?${query}`).then(res => setPatients(res.data));
+      axios.get(`/api/reports/surveys?${query}`).then(res => setSurveys(res.data));
+      axios.get(`/api/reports/maintenance?${query}`).then(res => setMaintenances(res.data));
     }
     if (['finance', 'secretary'].includes(userRole)) {
-      axios.get(`/api/reports/payments?page=${page}&pageSize=${pageSize}`).then(res => setFinances(res.data));
+      axios.get(`/api/reports/payments?${query}`).then(res => setFinances(res.data));
     }
-  }, [userRole, page]);
+  }, [userRole, page, filters]);
 
   useEffect(() => {
     if (finances.length > 0) {
@@ -45,6 +54,11 @@ const Reports = ({ userRole }) => {
     }
   }, [finances, t]);
 
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+    setPage(1);
+  };
+
   const generatePatientReport = () => {
     const doc = new jsPDF();
     doc.text(t('reports.patient_report'), 10, 10);
@@ -58,7 +72,7 @@ const Reports = ({ userRole }) => {
     const doc = new jsPDF();
     doc.text(t('reports.finance_report'), 10, 10);
     finances.forEach((f, i) => {
-      doc.text(`Paciente: ${f.patient_id}, Valor: R$${f.amount}, Status: ${f.status}`, 10, 20 + i * 10);
+       doc.text(`Paciente: ${f.patient_id}, Valor: R$${f.amount}, Status: ${f.status}`, 10, 20 + i * 10);
     });
     doc.save('relatorio_financeiro.pdf');
   };
@@ -84,6 +98,35 @@ const Reports = ({ userRole }) => {
   return (
     <div className="container" role="region" aria-label={t('reports.title')}>
       <h2 className="text-2xl font-bold mb-6">{t('reports.title')}</h2>
+      <div className="mb-4 flex space-x-4">
+        <input
+          type="date"
+          name="startDate"
+          value={filters.startDate}
+          onChange={handleFilterChange}
+          className="input"
+          aria-label={t('reports.start_date')}
+        />
+        <input
+          type="date"
+          name="endDate"
+          value={filters.endDate}
+          onChange={handleFilterChange}
+          className="input"
+          aria-label={t('reports.end_date')}
+        />
+        <select
+          name="status"
+          value={filters.status}
+          onChange={handleFilterChange}
+          className="input"
+          aria-label={t('reports.status_filter')}
+        >
+          <option value="">{t('reports.all_status')}</option>
+          <option value="active">{t('reports.active')}</option>
+          <option value="inactive">{t('reports.inactive')}</option>
+        </select>
+      </div>
       {['secretary', 'dentist'].includes(userRole) && (
         <section className="mb-6" aria-labelledby="patient-report">
           <h3 id="patient-report" className="text-lg font-semibold mb-2">{t('reports.patient_report')}</h3>
@@ -115,7 +158,7 @@ const Reports = ({ userRole }) => {
             </thead>
             <tbody>
               {finances.map(f => (
-                <tr key={f.id} className={f.status === 'paid' ? 'bg-green-100' : f.status === 'pending' ? 'bg-yellow-100' : 'bg-red-100'}>
+                <tr key={f.id} className={f.status === 'paid' ? 'bg-green-100 dark:bg-green-900' : f.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900' : 'bg-red-100 dark:bg-red-900'}>
                   <td>{f.patient_id}</td><td>R${f.amount}</td><td>{f.status}</td>
                 </tr>
               ))}
