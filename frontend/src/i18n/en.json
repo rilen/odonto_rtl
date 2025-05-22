@@ -11,6 +11,7 @@
     "cpf": "CPF",
     "status": "Status",
     "active": "Active",
+    "inactive": "Inactive",
     "patient": "Patient",
     "amount": "Amount",
     "attendance": "Attendance",
@@ -23,7 +24,11 @@
     "previous": "Previous",
     "next": "Next",
     "pagination": "Page navigation",
-    "finance_chart": "Financial amounts by patient chart"
+    "finance_chart": "Financial amounts by patient chart",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "status_filter": "Status Filter",
+    "all_status": "All Status"
   },
   "login": {
     "title": "Login",
