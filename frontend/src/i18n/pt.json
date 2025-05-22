@@ -1,4 +1,3 @@
-// Salvar em: frontend/src/i18n/pt.json
 {
   "reports": {
     "title": "Relatórios",
@@ -21,7 +20,9 @@
     "supplier": "Fornecedor",
     "date": "Data",
     "previous": "Anterior",
-    "next": "Próximo"
+    "next": "Próximo",
+    "pagination": "Navegação de páginas",
+    "finance_chart": "Gráfico de valores financeiros por paciente"
   },
   "login": {
     "title": "Login",
