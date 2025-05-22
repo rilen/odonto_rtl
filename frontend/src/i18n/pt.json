@@ -55,9 +55,15 @@
   },
   "admin": {
     "title": "Gerenciamento de Usuários",
+    "user_management": "Gerenciamento de Usuários",
+    "audit_logs": "Logs de Auditoria",
     "name": "Nome",
     "role": "Papel",
     "actions": "Ações",
+    "user_id": "ID do Usuário",
+    "action": "Ação",
+    "details": "Detalhes",
+    "timestamp": "Data e Hora",
     "admin": "Administrador",
     "secretary": "Secretária",
     "dentist": "Dentista",
@@ -80,7 +86,9 @@
     "title": "Financeiro",
     "patient": "Paciente",
     "amount": "Valor",
-    "status": "Status"
+    "status": "Status",
+    "actions": "Ações",
+    "pay": "Pagar"
   },
   "patient": {
     "title": "Meus Agendamentos",
