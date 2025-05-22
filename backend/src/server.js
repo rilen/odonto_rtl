@@ -17,4 +17,6 @@ app.use('/api/marketing', require('./routes/marketing'));
 app.use('/api/visitor', require('./routes/visitor'));
 app.use('/api/survey', require('./routes/survey'));
 app.use('/api/reports', require('./routes/reports'));
+app.use('/api/twofactor', require('./routes/twofactor'));
+app.use('/api/push', require('./routes/push'));
 app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
