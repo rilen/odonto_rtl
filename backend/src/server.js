@@ -1,4 +1,3 @@
-// Salvar em: backend/src/server.js
 const express = require('express');
 const formidable = require('formidable');
 const http = require('http');
@@ -9,7 +8,24 @@ const server = http.createServer(app);
 
 app.use(require('./middleware/security'));
 app.use(express.json());
-app.use(formidable());
+
+// Middleware para usar formidable corretamente
+app.use((req, res, next) => {
+    if (req.method === 'POST' && req.headers['content-type'].includes('multipart/form-data')) {
+        const form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return next(err);
+            }
+            req.body = fields;
+            req.files = files;
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/appointments', require('./routes/appointments'));
