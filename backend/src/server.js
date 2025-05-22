@@ -2,6 +2,8 @@
 const express = require('express');
 const formidable = require('formidable');
 const app = express();
+
+app.use(require('./middleware/security')); // Aplica middlewares de segurança
 app.use(express.json());
 app.use(formidable());
 app.use('/api/auth', require('./routes/auth'));
@@ -19,4 +21,5 @@ app.use('/api/survey', require('./routes/survey'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/twofactor', require('./routes/twofactor'));
 app.use('/api/push', require('./routes/push'));
+
 app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
