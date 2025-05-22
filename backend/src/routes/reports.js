@@ -13,4 +13,14 @@ router.get('/payments', async (req, res) => {
   res.json(rows);
 });
 
+router.get('/surveys', async (req, res) => {
+  const { rows } = await pool.query('SELECT id, patient_id, attendance, comfort, pain, confidence FROM surveys');
+  res.json(rows);
+});
+
+router.get('/maintenance', async (req, res) => {
+  const { rows } = await pool.query('SELECT id, equipment, supplier, date FROM maintenance');
+  res.json(rows);
+});
+
 module.exports = router;
