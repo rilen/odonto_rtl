@@ -1,33 +1,20 @@
-const formidable = require('formidable');
-app.use(formidable());
+// Salvar em: backend/src/server.js
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
+const formidable = require('formidable');
 const app = express();
-app.use(cors());
 app.use(express.json());
-const db = new sqlite3.Database(':memory:');
-const secret = 'your_jwt_secret';
-app.use((req, res, next) => {
-  console.log(`Access: ${req.method} ${req.url} at ${new Date()}`);
-  next();
-});
-app.post('/login', (req, res) => {
-  const { cpf, password } = req.body;
-  db.get('SELECT * FROM users WHERE cpf = ? AND password = ?', [cpf, password], (err, user) => {
-    if (err || !user) {
-      db.run('INSERT INTO login_attempts (cpf, timestamp) VALUES (?, ?)', [cpf, Date.now()]);
-      db.get('SELECT COUNT(*) as count FROM login_attempts WHERE cpf = ?', [cpf], (err, row) => {
-        if (row.count >= 3) return res.status(403).json({ error: 'Account locked' });
-        res.status(401).json({ error: 'Invalid credentials' });
-      });
-      return;
-    }
-    const token = jwt.sign({ id: user.id, role: user.role }, secret);
-    res.json({ token });
-  });
-});
-app.use('/api/marketing', require('./src/routes/marketing'));
-app.use('/api/maintenance', require('./src/routes/maintenance'));
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.use(formidable());
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/appointments', require('./routes/appointments'));
+app.use('/api/payments', require('./routes/payments'));
+app.use('/api/stock', require('./routes/stock'));
+app.use('/api/maintenance', require('./routes/maintenance'));
+app.use('/api/patients', require('./routes/patients'));
+app.use('/api/odontogram', require('./routes/odontogram'));
+app.use('/api/chat', require('./routes/chat'));
+app.use('/api/marketing', require('./routes/marketing'));
+app.use('/api/visitor', require('./routes/visitor'));
+app.use('/api/survey', require('./routes/survey'));
+app.use('/api/reports', require('./routes/reports'));
+app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
