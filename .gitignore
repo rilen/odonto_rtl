@@ -1,1 +1,18 @@
+# Dependências
+node_modules/
 
+# Build
+frontend/build/
+backend/data/*.sql
+backend/logs/
+
+# Ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Diversos
+.DS_Store
+*.log
