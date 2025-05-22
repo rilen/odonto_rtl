@@ -1,66 +1,59 @@
 // Salvar em: frontend/src/components/Appointment.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const Appointment = ({ userId, userRole }) => {
+  const { t } = useTranslation();
   const [appointments, setAppointments] = useState([]);
-  const [newAppointment, setNewAppointment] = useState({ date: '', type: '' });
+  const [notification, setNotification] = useState('');
 
   useEffect(() => {
-    fetch('/api/appointments').then(res => res.json()).then(data => setAppointments(data));
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.ready.then(reg => {
-        reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: 'YOUR_VAPID_PUBLIC_KEY' })
-          .then(subscription => {
-            axios.post('/api/push/subscribe', { userId, subscription });
-          });
-      });
-    }
+    axios.get('/api/appointments').then(res => setAppointments(res.data));
   }, []);
 
-  const scheduleAppointment = async () => {
-    const appointment = { patient_id: userId, date: newAppointment.date, type: newAppointment.type };
-    if (!navigator.onLine) {
-      await caches.open('offline-appointments').then(cache => cache.put('/api/appointments', new Response(JSON.stringify(appointment))));
-      navigator.serviceWorker.ready.then(sw => sw.sync.register('sync-appointments'));
-    } else {
-      await axios.post('/api/appointments', appointment);
-      setAppointments([...appointments, appointment]);
+  const confirmAppointment = async (id) => {
+    try {
+      const res = await axios.put(`/api/appointments/${id}/confirm`);
+      setAppointments(appointments.map(a => a.id === id ? res.data : a));
+      setNotification(t('notifications.whatsapp_confirmation'));
+      setTimeout(() => setNotification(''), 3000);
+    } catch (err) {
+      console.error('Erro ao confirmar agendamento:', err);
     }
-    setNewAppointment({ date: '', type: '' });
   };
 
   return (
-    <div className="container">
-      <h2 className="text-2xl font-bold mb-4">Agendamentos</h2>
-      {userRole === 'secretary' && (
-        <div className="mb-4">
-          <input
-            type="date"
-            value={newAppointment.date}
-            onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })}
-            className="input mr-2"
-          />
-          <select
-            value={newAppointment.type}
-            onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
-            className="input mr-2"
-          >
-            <option value="">Tipo</option>
-            <option value="evaluation">Avaliação</option>
-            <option value="cleaning">Limpeza</option>
-            <option value="treatment">Tratamento</option>
-          </select>
-          <button onClick={scheduleAppointment} className="button">Agendar</button>
-        </div>
-      )}
+    <div className="container" role="region" aria-label={t('secretary.title')}>
+      <h2 className="text-2xl font-bold mb-4">{t('secretary.title')}</h2>
+      {notification && <p className="bg-green-100 text-green-800 p-3 rounded-lg mb-4">{notification}</p>}
       <table className="table">
         <thead>
-          <tr><th>Data</th><th>Tipo</th><th>Status</th></tr>
+          <tr>
+            <th scope="col">{t('secretary.patient')}</th>
+            <th scope="col">{t('secretary.date')}</th>
+            <th scope="col">{t('secretary.type')}</th>
+            <th scope="col">{t('secretary.actions')}</th>
+          </tr>
         </thead>
         <tbody>
           {appointments.map(a => (
-            <tr key={a.id}><td>{a.date}</td><td>{a.type}</td><td>{a.status}</td></tr>
+            <tr key={a.id}>
+              <td>{a.patient_id}</td>
+              <td>{new Date(a.date).toLocaleString()}</td>
+              <td>{a.type}</td>
+              <td>
+                {userRole === 'secretary' && a.status === 'pending' && (
+                  <button
+                    onClick={() => confirmAppointment(a.id)}
+                    className="button"
+                    aria-label={t('secretary.confirm_label', { id: a.id })}
+                  >
+                    {t('secretary.confirm')}
+                  </button>
+                )}
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
