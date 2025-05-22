@@ -37,5 +37,55 @@
     "finance": "Finance",
     "stock": "Stock",
     "reports": "Reports"
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Type your message",
+    "input": "Message input",
+    "send": "Send"
+  },
+  "admin": {
+    "title": "User Management",
+    "name": "Name",
+    "role": "Role",
+    "actions": "Actions",
+    "admin": "Administrator",
+    "secretary": "Secretary",
+    "dentist": "Dentist",
+    "patient": "Patient",
+    "change_role": "Change role for {{name}}"
+  },
+  "assistant": {
+    "title": "Stock",
+    "item": "Item",
+    "quantity": "Quantity",
+    "critical": "Critical Level"
+  },
+  "dentist": {
+    "title": "Appointments",
+    "patient": "Patient",
+    "date": "Date",
+    "type": "Type"
+  },
+  "finance": {
+    "title": "Finance",
+    "patient": "Patient",
+    "amount": "Amount",
+    "status": "Status"
+  },
+  "patient": {
+    "title": "My Appointments",
+    "date": "Date",
+    "type": "Type",
+    "status": "Status"
+  },
+  "secretary": {
+    "title": "Appointment Management",
+    "patient": "Patient",
+    "date": "Date",
+    "type": "Type",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "confirm_label": "Confirm appointment {{id}}"
   }
 }
