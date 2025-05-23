@@ -1,3 +1,11 @@
+"dashboard": {
+  "title": "Painel",
+  "appointments": "Agendamentos",
+  "patients": "Pacientes",
+  "revenue": "Receita",
+  "appointments_patients": "Agendamentos e Pacientes",
+  "error_fetch": "Erro ao carregar métricas"
+}
 {
   "reports": {
     "title": "Relatórios",
