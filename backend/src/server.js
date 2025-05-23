@@ -8,6 +8,11 @@ const { startScheduler } = require('./services/scheduler');
 const app = express();
 const server = http.createServer(app);
 
+const securityMiddleware = require('./middleware/security');
+
+app.use(...securityMiddleware); // Spread the array into individual functions
+
+
 app.use(require('./middleware/security'));
 app.use(express.json());
 app.use(formidable());
