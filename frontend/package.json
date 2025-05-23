@@ -9,19 +9,20 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^2.2.0",
-    "axios": "^1.6.0",
-"chart.js": "^4.4.3"
-    "i18next": "^23.0.0",
-    "jspdf": "^3.1.0",
-    "react": "^18.3.0",
-    "react-chartjs-2": "^6.0.0",
-    "react-dom": "^18.3.0",
-    "react-i18next": "^13.0.0",
-    "react-router-dom": "^7.7.0",
-    "react-scripts": "^5.1.0",
-    "tailwindcss": "^3.4.0"
-  },
+  "@stripe/stripe-js": "^2.2.0",
+  "axios": "^1.6.0",
+  "chart.js": "^4.4.3",
+  "i18next": "^23.0.0",
+  "jspdf": "^3.1.0",
+  "react": "^18.3.0",
+  "react-chartjs-2": "^6.0.0",
+  "react-dom": "^18.3.0",
+  "react-i18next": "^13.0.0",
+  "react-router-dom": "^7.7.0",
+  "react-scripts": "^5.1.0",
+  "tailwindcss": "^3.4.0"
+}
+,
   "devDependencies": {
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^15.0.0",
