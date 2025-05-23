@@ -1,38 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Odonto RTL</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.18.9/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" href="/logo.png">
-</head>
-<body>
-  <div id="root"></div>
-  <script type="text/babel">
-    function App() {
-      const [isSidebarOpen, setSidebarOpen] = React.useState(false);
-      return (
-        <div className="flex h-screen">
-          <div className={`fixed inset-y-0 left-0 w-64 bg-gray-800 text-white transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0`}>
-            <img src="/logo.png" alt="Logo" className="h-12 m-4" />
-            <nav>
-              <a href="#" className="block p-4 hover:bg-gray-700">Dashboard</a>
-              <a href="#" className="block p-4 hover:bg-gray-700">Perfil</a>
-            </nav>
-          </div>
-          <div className="flex-1 p-4">
-            <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="md:hidden p-2">Menu</button>
-            <h1 className="text-2xl">Odonto RTL</h1>
-          </div>
-        </div>
-      );
-    }
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+<!-- Salvar em: frontend/public/index.html -->
+     <!DOCTYPE html>
+     <html lang="pt-BR">
+       <head>
+         <meta charset="utf-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1" />
+         <meta name="theme-color" content="#000000" />
+         <meta name="description" content="Sistema de gerenciamento odontológico Odonto RTL" />
+         <link rel="icon" href="%PUBLIC_URL%/logo.png" />
+         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+         <title>Odonto RTL</title>
+       </head>
+       <body>
+         <noscript>Você precisa habilitar o JavaScript para rodar esta aplicação.</noscript>
+         <div id="root"></div>
+       </body>
+     </html>
