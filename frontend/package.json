@@ -9,24 +9,23 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-  "@stripe/stripe-js": "^2.2.0",
-  "axios": "^1.6.0",
-  "chart.js": "^4.4.3",
-  "i18next": "^23.0.0",
-"jspdf": "^2.5.1",
-  "react": "^18.3.0",
-"react-chartjs-2": "^5.3.0",
-  "react-dom": "^18.3.0",
-  "react-i18next": "^13.0.0",
-"react-router-dom": "^6.22.3",
-  "react-scripts": "^5.0.1",
-  "tailwindcss": "^3.4.0"
-}
-,
+    "@stripe/stripe-js": "^2.2.0",
+    "axios": "^1.6.0",
+    "chart.js": "^4.4.3",
+    "i18next": "^23.0.0",
+    "jspdf": "^3.0.1",
+    "react": "^18.3.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.3.0",
+    "react-i18next": "^13.0.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "^3.0.1",
+    "tailwindcss": "^3.4.0"
+  },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^15.0.0",
-"@testing-library/user-event": "^14.4.3"
+    "@testing-library/user-event": "^14.4.3"
   },
   "browserslist": {
     "production": [
