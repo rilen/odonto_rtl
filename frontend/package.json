@@ -9,23 +9,23 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^2.1.0",
-    "axios": "^1.4.0",
-    "chart.js": "^4.4.9",
-    "i18next": "^22.4.15",
-    "jspdf": "^3.0.1",
-    "react": "^18.2.0",
-    "react-chartjs-2": "^5.3.0",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^12.2.0",
-    "react-router-dom": "^7.6.0",
-    "react-scripts": "^5.0.1",
-    "tailwindcss": "^3.3.1"
+    "@stripe/stripe-js": "^2.2.0",
+    "axios": "^1.6.0",
+    "chart.js": "^4.5.0",
+    "i18next": "^23.0.0",
+    "jspdf": "^3.1.0",
+    "react": "^18.3.0",
+    "react-chartjs-2": "^6.0.0",
+    "react-dom": "^18.3.0",
+    "react-i18next": "^13.0.0",
+    "react-router-dom": "^7.7.0",
+    "react-scripts": "^5.1.0",
+    "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3"
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^15.0.0",
+    "@testing-library/user-event": "^15.0.0"
   },
   "browserslist": {
     "production": [
