@@ -1,108 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
-import { 
-  Chart as ChartJS, 
-  CategoryScale, 
-  LinearScale, 
-  BarElement, 
-  LineElement, 
-  PointElement, 
-  Title, 
-  Tooltip, 
-  Legend, 
-  Filler 
-} from 'chart.js';
-import zoomPlugin from 'chartjs-plugin-zoom';
+// Salvar em: frontend/src/components/Dashboard.js
+   import React, { useState, useEffect } from 'react';
+   import { useTranslation } from 'react-i18next';
+   import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+   import { Pie, Bar } from 'react-chartjs-2';
+   import axios from 'axios';
 
-// ✅ Registro correto dos componentes e plugins
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  zoomPlugin
-);
+   ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-// ✅ Configuração do plugin de zoom
-const options = {
-  plugins: {
-    zoom: {
-      pan: { enabled: true, mode: 'x' },
-      zoom: {
-        wheel: { enabled: true },
-        pinch: { enabled: true },
-        mode: 'x'
-      }
-    }
-  }
-};
+   const Dashboard = () => {
+     const { t } = useTranslation();
+     const [metrics, setMetrics] = useState({ appointments: 0, patients: 0, revenue: 0 });
+     const [error, setError] = useState('');
 
-const Dashboard = () => {
-  const [consultations, setConsultations] = useState([]);
-  const [revenue, setRevenue] = useState([]);
+     useEffect(() => {
+       const fetchMetrics = async () => {
+         try {
+           const token = localStorage.getItem('token');
+           const response = await axios.get('/api/dashboard/metrics', {
+             headers: { Authorization: `Bearer ${token}` },
+           });
+           setMetrics(response.data);
+         } catch (err) {
+           setError(t('dashboard.error_fetch') || 'Erro ao carregar métricas');
+         }
+       };
+       fetchMetrics();
+     }, [t]);
 
-  useEffect(() => {
-    fetch('/api/appointments')
-      .then(res => res.json())
-      .then(data => setConsultations(data))
-      .catch(error => console.error("Erro ao buscar consultas:", error));
+     const pieData = {
+       labels: [t('dashboard.appointments'), t('dashboard.patients')],
+       datasets: [
+         {
+           data: [metrics.appointments, metrics.patients],
+           backgroundColor: ['#36A2EB', '#FF6384'],
+           hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+         },
+       ],
+     };
 
-    fetch('/api/payments')
-      .then(res => res.json())
-      .then(data => setRevenue(data))
-      .catch(error => console.error("Erro ao buscar faturamento:", error));
-  }, []);
+     const barData = {
+       labels: [t('dashboard.revenue')],
+       datasets: [
+         {
+           label: t('dashboard.revenue'),
+           data: [metrics.revenue],
+           backgroundColor: '#4BC0C0',
+         },
+       ],
+     };
 
-  // ✅ Tratamento para evitar erros em gráficos vazios
-  const barData = {
-    labels: consultations.length ? consultations.map(c => c.date) : ["Sem Dados"],
-    datasets: [
-      {
-        label: "Consultas",
-        data: consultations.length ? consultations.map(c => c.count || 0) : [0],
-        backgroundColor: "rgba(75, 192, 192, 0.2)"
-      }
-    ]
-  };
+     return (
+       <div className="container mx-auto p-4">
+         <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">{t('dashboard.title')}</h2>
+         {error && <p className="text-red-500 mb-4">{error}</p>}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+             <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">{t('dashboard.appointments_patients')}</h3>
+             <Pie data={pieData} />
+           </div>
+           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+             <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">{t('dashboard.revenue')}</h3>
+             <Bar data={barData} />
+           </div>
+         </div>
+       </div>
+     );
+   };
 
-  const lineData = {
-    labels: revenue.length ? revenue.map(r => r.date) : ["Sem Dados"],
-    datasets: [
-      {
-        label: "Faturamento",
-        data: revenue.length ? revenue.map(r => r.amount || 0) : [0],
-        borderColor: "rgba(255, 99, 132, 1)",
-        fill: false
-      }
-    ]
-  };
-
-  // ✅ Corrigida filtragem do estoque crítico
-  const criticalStockCount = consultations.filter(c =>
-    typeof c.quantity === "number" &&
-    typeof c.critical_level === "number" &&
-    c.quantity < c.critical_level
-  ).length;
-
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl mb-4">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-gray-100">Consultas: {consultations.length}</div>
-        <div className="p-4 bg-gray-100">Faturamento: R${revenue.reduce((sum, r) => sum + r.amount, 0)}</div>
-        <div className="p-4 bg-gray-100">Estoque Crítico: {criticalStockCount}</div>
-      </div>
-      <div className="mt-4">
-        <Bar data={barData} options={options} />
-        <Line data={lineData} options={options} />
-      </div>
-    </div>
-  );
-};
-
-export default Dashboard;
+   export default Dashboard;
