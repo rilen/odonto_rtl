@@ -1,44 +1,48 @@
-// Salvar em: backend/src/models/User.js
-const pool = require('../database');
-const bcrypt = require('bcryptjs');
+```javascript
+   // Salvar em: backend/src/routes/users.js
+   const express = require('express');
+   const router = express.Router();
+   const pool = require('../database');
 
-class User {
-  static async create({ cpf, password, role, name, age, address, phone, email, googleAccessToken }) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const { rows } = await pool.query(
-      'INSERT INTO users (cpf, password, role, name, age, address, phone, email, google_access_token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [cpf, hashedPassword, role, name, age, address, phone, email, googleAccessToken || null]
-    );
-    return rows[0];
-  }
+   router.post('/', async (req, res) => {
+     const { cpf, password, role, name } = req.body;
+     try {
+       const { rows } = await pool.query(
+         'INSERT INTO users (cpf, password, role, name) VALUES ($1, $2, $3, $4) RETURNING *',
+         [cpf, password, role, name]
+       );
+       res.status(201).json(rows[0]);
+     } catch (err) {
+       res.status(500).json({ error: 'Erro ao criar usuário' });
+     }
+   });
 
-  static async findAll() {
-    const { rows } = await pool.query('SELECT * FROM users');
-    return rows;
-  }
+   router.get('/me', async (req, res) => {
+     try {
+       const { rows } = await pool.query(
+         'SELECT id, cpf, name, phone, email, address, role FROM users WHERE id = $1',
+         [req.user.id]
+       );
+       if (rows.length === 0) return res.status(404).json({ error: 'Usuário não encontrado' });
+       res.json(rows[0]);
+     } catch (err) {
+       res.status(500).json({ error: 'Erro ao buscar usuário' });
+     }
+   });
 
-  static async findById(id) {
-    const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    return rows[0];
-  }
+   router.put('/me', async (req, res) => {
+     const { name, phone, email, address } = req.body;
+     try {
+       const { rows } = await pool.query(
+         'UPDATE users SET name = $1, phone = $2, email = $3, address = $4 WHERE id = $5 RETURNING *',
+         [name, phone, email, address, req.user.id]
+       );
+       if (rows.length === 0) return res.status(404).json({ error: 'Usuário não encontrado' });
+       res.json(rows[0]);
+     } catch (err) {
+       res.status(500).json({ error: 'Erro ao atualizar usuário' });
+     }
+   });
 
-  static async findByCpf(cpf) {
-    const { rows } = await pool.query('SELECT * FROM users WHERE cpf = $1', [cpf]);
-    return rows[0];
-  }
-
-  static async update(id, updates) {
-    const hashedPassword = updates.password ? await bcrypt.hash(updates.password, 10) : undefined;
-    const { rows } = await pool.query(
-      'UPDATE users SET cpf = $1, password = COALESCE($2, password), role = $3, name = $4, age = $5, address = $6, phone = $7, email = $8, google_access_token = $9 WHERE id = $10 RETURNING *',
-      [updates.cpf, hashedPassword, updates.role, updates.name, updates.age, updates.address, updates.phone, updates.email, updates.googleAccessToken || null, id]
-    );
-    return rows[0];
-  }
-
-  static async delete(id) {
-    await pool.query('DELETE FROM users WHERE id = $1', [id]);
-  }
-}
-
-module.exports = User;
+   module.exports = router;
+   ```
