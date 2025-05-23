@@ -2,6 +2,7 @@
    const express = require('express');
    const router = express.Router();
    const pool = require('../database');
+   const auth = require('../middleware/auth');
 
    router.post('/', async (req, res) => {
      const { cpf, password, role, name } = req.body;
@@ -16,7 +17,7 @@
      }
    });
 
-   router.get('/me', async (req, res) => {
+   router.get('/me', auth, async (req, res) => {
      try {
        const { rows } = await pool.query(
          'SELECT id, cpf, name, phone, email, address, role FROM users WHERE id = $1',
@@ -29,7 +30,7 @@
      }
    });
 
-   router.put('/me', async (req, res) => {
+   router.put('/me', auth, async (req, res) => {
      const { name, phone, email, address } = req.body;
      try {
        const { rows } = await pool.query(
