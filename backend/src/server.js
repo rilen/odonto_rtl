@@ -9,6 +9,14 @@ const app = express();
 const server = http.createServer(app);
 
 const securityMiddleware = require('./middleware/security');
+console.log('Security Middleware:', securityMiddleware); 
+
+const authMiddleware = require('./middleware/auth');
+console.log('Auth Middleware:', authMiddleware);
+
+app.use(...securityMiddleware); // Spread array if necessary
+app.use(authMiddleware); // Make sure it's a function
+
 
 app.use(...securityMiddleware); // Spread the array into individual functions
 
