@@ -1,4 +1,11 @@
-{
+  "dashboard": {
+  "title": "Dashboard",
+  "appointments": "Appointments",
+  "patients": "Patients",
+  "revenue": "Revenue",
+  "appointments_patients": "Appointments and Patients",
+  "error_fetch": "Error fetching metrics"
+},
   "reports": {
     "title": "Reports",
     "patient_report": "Patient Report",
