@@ -7,16 +7,17 @@ const auth = require('../middleware/auth');
 
 router.post('/', async (req, res) => {
   const { cpf, password, role, name } = req.body;
-try {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const { rows } = await pool.query(
-    'INSERT INTO users (cpf, password, role, name) VALUES ($1, $2, $3, $4) RETURNING *',
-    [cpf, hashedPassword, role, name]
-  );
-  res.status(201).json(rows[0]);
-} catch (err) {
-  res.status(500).json({ error: 'Erro ao criar usuário' });
-}
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const { rows } = await pool.query(
+      'INSERT INTO users (cpf, password, role, name) VALUES ($1, $2, $3, $4) RETURNING *',
+      [cpf, hashedPassword, role, name]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Database error:', err); // Log the error
+    res.status(500).json({ error: 'Erro ao criar usuário', details: err.message });
+  }
 });
 
 router.get('/', auth, async (req, res) => {
