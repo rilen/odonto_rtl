@@ -15,8 +15,12 @@ router.post('/', async (req, res) => {
     );
     res.status(201).json(rows[0]);
   } catch (err) {
-    console.error('Database error:', err); // Log the error
-    res.status(500).json({ error: 'Erro ao criar usuário', details: err.message });
+    console.error('Database error:', err);
+    if (err.code === '23505') {
+      res.status(400).json({ error: 'CPF já registrado' });
+    } else {
+      res.status(500).json({ error: 'Erro ao criar usuário', details: err.message });
+    }
   }
 });
 
