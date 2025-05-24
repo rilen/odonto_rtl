@@ -12,15 +12,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/api/auth/login', { cpf, password });
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.error || t('login.error') || 'Erro ao fazer login');
-    }
-  };
+  e.preventDefault();
+  try {
+    const response = await axios.post('http://localhost:3000/api/auth/login', { cpf, password });
+    localStorage.setItem('token', response.data.token);
+    navigate('/dashboard');
+  } catch (err) {
+    setError(err.response?.data?.error || t('login.error') || 'Erro ao fazer login');
+  }
+};
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
