@@ -1,6 +1,5 @@
-// Salvar em: frontend/src/index.js
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'; // Atualizado para React 18+
 import './styles.css';
 import App from './App';
 import i18n from 'i18next';
@@ -18,4 +17,7 @@ i18n.use(initReactI18next).init({
   interpolation: { escapeValue: false }
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// React 18+
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<App />);
