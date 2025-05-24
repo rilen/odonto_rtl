@@ -40,6 +40,7 @@
   },
   "login": {
     "title": "Login",
+    "error": "Invalid username or password.",
     "cpf": "CPF",
     "password": "Password",
     "login": "Login"
