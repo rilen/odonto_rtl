@@ -1,0 +1,31 @@
+{
+  "name": "odonto-rtl-backend",
+  "version": "1.0.0",
+  "description": "Backend para o sistema odontológico Odonto-RTL",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "author": ""
+}
